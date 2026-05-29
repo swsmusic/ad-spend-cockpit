@@ -63,32 +63,31 @@
   .ops-panel .ops-alert { background:rgba(245,158,11,0.08); border-left:3px solid var(--warn); padding:8px 12px; border-radius:0 4px 4px 0; margin-top:8px; }
   .ops-panel .ops-alert p { font-size:12px; color:var(--warn); margin:0; }
 
-  /* Bottleneck funnel */
-  .bn-panel { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:24px; }
-  .bn-panel h2 { font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:12px; }
-  .bn-label { font-size:11px; color:var(--muted); margin-bottom:8px; }
-  .bn-funnel { display:flex; align-items:flex-end; gap:4px; height:140px; padding-bottom:28px; position:relative; }
-  .bn-stage { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; min-width:60px; }
-  .bn-bar { width:100%; border-radius:4px 4px 0 0; transition:all 0.3s; position:relative; }
-  .bn-bar.healthy { background:rgba(34,197,94,0.5); }
-  .bn-bar.warning { background:rgba(245,158,11,0.5); }
-  .bn-bar.danger { background:rgba(239,68,68,0.6); }
-  .bn-bar.neutral { background:rgba(59,130,246,0.4); }
-  .bn-stage-name { font-size:10px; color:var(--muted); text-align:center; margin-top:6px; position:absolute; bottom:-26px; left:0; right:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .bn-stage-value { font-size:11px; font-weight:600; color:var(--text); text-align:center; margin-top:4px; position:absolute; top:-18px; left:0; right:0; }
-  .bn-drop { position:absolute; bottom:-14px; left:50%; transform:translateX(-50%); font-size:9px; color:var(--muted); white-space:nowrap; }
-  .bn-drop.bad { color:var(--danger); font-weight:600; }
-  .bn-diagnosis { font-size:12px; color:var(--muted); line-height:1.5; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
-  .bn-diagnosis strong { color:var(--text); }
-  .bn-worst { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; padding:2px 8px; border-radius:10px; background:rgba(239,68,68,0.1); color:var(--danger); margin-left:8px; }
-
+  /* Bottleneck funnel card */
   .bn-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; position:relative; }
   .bn-card.danger { border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.04); }
-  .bn-card .bn-label { font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:6px; }
-  .bn-card .bn-worst { font-size:13px; font-weight:600; color:var(--danger); }
-  .bn-card .bn-diagnosis { font-size:11px; color:var(--muted); line-height:1.5; margin-top:6px; overflow-wrap:break-word; }
+  .bn-card .bn-head { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
+  .bn-card .bn-head .bn-label { font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin:0; }
+  .bn-card .bn-head .bn-title { font-size:12px; color:var(--text); font-weight:600; margin:0; }
+  .bn-card .bn-head-right { display:flex; flex-direction:column; align-items:flex-end; gap:4px; }
+  .bn-card .bn-worst-badge { font-size:13px; font-weight:700; color:var(--danger); white-space:nowrap; }
+  .bn-card .bn-updated { font-size:10px; color:var(--muted); opacity:0.7; white-space:nowrap; }
+
+  /* Funnel chart inside bottleneck card */
+  .bn-card .bn-funnel-wrap { margin:10px 0 4px 0; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .bn-card .bn-funnel { display:flex; align-items:flex-end; gap:3px; min-width:250px; }
+  .bn-card .bn-stage { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; }
+  .bn-card .bn-bar { width:100%; border-radius:4px 4px 0 0; min-height:4px; }
+  .bn-card .bn-bar.healthy { background:rgba(34,197,94,0.4); }
+  .bn-card .bn-bar.warning { background:rgba(245,158,11,0.5); }
+  .bn-card .bn-bar.danger { background:rgba(239,68,68,0.6); }
+  .bn-card .bn-bar.neutral { background:rgba(59,130,246,0.3); }
+  .bn-card .bn-stage-val { font-size:9px; font-weight:600; color:var(--text); text-align:center; }
+  .bn-card .bn-stage-name { font-size:8px; color:var(--muted); text-align:center; margin-top:2px; }
+  .bn-card .bn-drop-label { font-size:7px; color:var(--danger); text-align:center; font-weight:700; }
+
+  .bn-card .bn-diagnosis { font-size:11px; color:var(--muted); line-height:1.5; margin-top:8px; padding-top:8px; border-top:1px solid var(--border); }
   .bn-card .bn-diagnosis strong { color:var(--text); }
-  .bn-card .bn-updated { font-size:10px; color:var(--muted); margin-top:6px; opacity:0.7; }
 
   .chart-wrap { position:relative; height:260px; }
   .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
@@ -113,6 +112,11 @@
     .grid { grid-template-columns:1fr; gap:12px; }
     .panel { padding:12px; }
     .ops-panel { padding:12px; }
+    .bn-card .bn-funnel { gap:2px; min-width:200px; }
+    .bn-card .bn-stage-val { font-size:7px; }
+    .bn-card .bn-stage-name { font-size:6px; }
+    .bn-card .bn-drop-label { display:none; }
+    .bn-card .bn-diagnosis { font-size:10px; }
     .chart-wrap { height:200px; }
     th, td { padding:6px 8px; font-size:12px; }
   }
@@ -240,13 +244,44 @@ function renderBottleneckCard(notes) {
   const bn = notes?.bottleneck;
   if (!bn || !bn.stages || bn.stages.length < 2) return '';
   const worst = bn.worst_drop;
+  const second = bn.second_worst;
   const diagnosis = bn.diagnosis || 'No diagnosis available.';
+  const maxVal = Math.max(...bn.stages.map(s => s.value || 0));
+  const worstFrom = worst?.from || '';
+  const secondFrom = second?.from || '';
+
+  const bars = bn.stages.map((s, i) => {
+    const pct = maxVal > 0 ? Math.max((s.value / maxVal) * 100, 2) : 2;
+    const isDanger = s.name === worstFrom || s.name === secondFrom;
+    const dropInfo = bn.drops?.find(d => d.to === s.name);
+    const dropLabel = dropInfo && dropInfo.rate < 50 ? `-${(100 - dropInfo.rate).toFixed(0)}%` : '';
+
+    return `
+      <div class="bn-stage">
+        <div class="bn-bar ${isDanger ? 'danger' : pct > 50 ? 'neutral' : 'warning'}" style="height:${pct * 1.2}px;"></div>
+        <div class="bn-stage-val">${s.value === 0 ? '0' : s.value >= 1000 ? (s.value / 1000).toFixed(1) + 'K' : s.value}</div>
+        <div class="bn-stage-name">${s.name}</div>
+        ${dropLabel ? `<div class="bn-drop-label">${dropLabel}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+
   return `
     <div class="hero-card bn-card ${worst ? 'danger' : 'neutral'}">
-      <div class="bn-label">Bottleneck</div>
-      <div class="bn-worst">${worst ? worst.label || 'Bottleneck' : 'No bottleneck'}</div>
-      <div class="bn-diagnosis"><strong>${bn.funnel_label || 'Funnel'}:</strong> ${diagnosis}</div>
-      <div class="bn-updated">Updated ${bn.updated || ''}</div>
+      <div class="bn-head">
+        <div>
+          <div class="bn-label">Bottleneck Analysis</div>
+          <div class="bn-title">${bn.funnel_label || 'Funnel'}</div>
+        </div>
+        <div class="bn-head-right">
+          <div class="bn-worst-badge">⚠ ${worst ? worst.label || 'Bottleneck' : 'No bottleneck'}</div>
+          <div class="bn-updated">Updated ${bn.updated || ''}</div>
+        </div>
+      </div>
+      <div class="bn-funnel-wrap">
+        <div class="bn-funnel">${bars}</div>
+      </div>
+      <div class="bn-diagnosis">${diagnosis}</div>
     </div>
   `;
 }
