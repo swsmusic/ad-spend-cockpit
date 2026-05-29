@@ -18,12 +18,26 @@
   .refresh-btn:disabled { opacity:0.5; cursor:not-allowed; }
 
   .hero { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px; margin-bottom:24px; }
-  .hero-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; }
+  .hero-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; position:relative; }
   .hero-card .label { font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:4px; }
   .hero-card .value { font-size:24px; font-weight:700; }
   .hero-card .delta { font-size:12px; margin-top:4px; }
   .hero-card .delta.pos { color:var(--accent2); }
   .hero-card .delta.neg { color:var(--danger); }
+  .hero-card .norm { font-size:10px; color:var(--muted); margin-top:4px; opacity:0.8; }
+  .hero-card .norm strong { color:var(--text); }
+
+  /* Health indicators */
+  .hero-card.healthy { border-color:rgba(34,197,94,0.3); background:rgba(34,197,94,0.04); }
+  .hero-card.warning { border-color:rgba(245,158,11,0.3); background:rgba(245,158,11,0.04); }
+  .hero-card.danger { border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.04); }
+  .hero-card.neutral { border-color:var(--border); background:var(--card); }
+
+  .health-dot { position:absolute; top:10px; right:10px; width:6px; height:6px; border-radius:50%; }
+  .health-dot.healthy { background:var(--accent2); box-shadow:0 0 6px rgba(34,197,94,0.5); }
+  .health-dot.warning { background:var(--warn); box-shadow:0 0 6px rgba(245,158,11,0.5); }
+  .health-dot.danger { background:var(--danger); box-shadow:0 0 6px rgba(239,68,68,0.5); }
+  .health-dot.neutral { background:var(--muted); }
 
   .ops-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px; margin-bottom:24px; }
   .ops-card .ops-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
@@ -57,12 +71,6 @@
   td { padding:8px 10px; border-bottom:1px solid var(--border); }
   tr:last-child td { border-bottom:none; }
   .right { text-align:right; }
-  .platform { display:flex; align-items:center; gap:8px; margin-bottom:8px; padding:10px; background:rgba(255,255,255,0.02); border-radius:6px; }
-  .platform .dot { width:8px; height:8px; border-radius:50%; }
-  .platform .dot.active { background:var(--accent2); }
-  .platform .dot.inactive { background:var(--muted); }
-  .platform .name { font-weight:500; }
-  .platform .status { font-size:12px; color:var(--muted); margin-left:auto; }
 
   .loading { text-align:center; padding:40px; color:var(--muted); }
   .error { text-align:center; padding:40px; color:var(--danger); }
@@ -90,7 +98,7 @@
 
 <script>
 const AD_SPEND_DATA = {"collected_at":"2026-05-29T01:59:59.466Z","platforms":{"meta":{"account_name":"NorthMac Services","account_id":"act_599729284106099","currency":"USD","active_campaigns":1,"total_spend_30d":322.61,"total_clicks_30d":840,"total_impressions_30d":54440,"total_conversions_30d":0,"avg_cpc":0.38,"avg_cpm":5.93,"ctr":1.54,"daily":[{"date":"2026-05-14","spend":17.18,"clicks":9,"impressions":482,"conversions":0},{"date":"2026-05-15","spend":23.58,"clicks":8,"impressions":532,"conversions":0},{"date":"2026-05-16","spend":18.53,"clicks":10,"impressions":235,"conversions":0},{"date":"2026-05-17","spend":33.27,"clicks":12,"impressions":584,"conversions":0},{"date":"2026-05-18","spend":24.79,"clicks":9,"impressions":486,"conversions":0},{"date":"2026-05-19","spend":17.09,"clicks":5,"impressions":220,"conversions":0},{"date":"2026-05-20","spend":22.62,"clicks":154,"impressions":12839,"conversions":0},{"date":"2026-05-21","spend":29.44,"clicks":179,"impressions":15951,"conversions":0},{"date":"2026-05-22","spend":26.72,"clicks":160,"impressions":9334,"conversions":0},{"date":"2026-05-23","spend":28.05,"clicks":72,"impressions":4206,"conversions":0},{"date":"2026-05-24","spend":21.44,"clicks":25,"impressions":1249,"conversions":0},{"date":"2026-05-25","spend":25.66,"clicks":75,"impressions":2928,"conversions":0},{"date":"2026-05-26","spend":15.81,"clicks":66,"impressions":1500,"conversions":0},{"date":"2026-05-27","spend":18.43,"clicks":56,"impressions":3894,"conversions":0}],"campaigns":[{"name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","spend":187.3,"clicks":786,"impressions":51889,"conversions":0},{"name":"NMS - Better Jobs Audit - Discovery - NC","spend":135.31,"clicks":54,"impressions":2551,"conversions":0}],"raw_insights":[{"spend":"17.18","impressions":"482","clicks":"9","ctr":"1.86722","cpc":"1.908889","cpm":"35.643154","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-14","date_stop":"2026-05-14"},{"spend":"23.58","impressions":"532","clicks":"8","ctr":"1.503759","cpc":"2.9475","cpm":"44.323308","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-15","date_stop":"2026-05-15"},{"spend":"18.53","impressions":"235","clicks":"10","ctr":"4.255319","cpc":"1.853","cpm":"78.851064","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-16","date_stop":"2026-05-16"},{"spend":"33.27","impressions":"584","clicks":"12","ctr":"2.054795","cpc":"2.7725","cpm":"56.969178","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-17","date_stop":"2026-05-17"},{"spend":"24.79","impressions":"486","clicks":"9","ctr":"1.851852","cpc":"2.754444","cpm":"51.00823","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-18","date_stop":"2026-05-18"},{"spend":"17.09","impressions":"220","clicks":"5","ctr":"2.272727","cpc":"3.418","cpm":"77.681818","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-19","date_stop":"2026-05-19"},{"spend":"0.87","impressions":"12","clicks":"1","ctr":"8.333333","cpc":"0.87","cpm":"72.5","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-20","date_stop":"2026-05-20"},{"spend":"21.75","impressions":"12827","clicks":"153","ctr":"1.192796","cpc":"0.142157","cpm":"1.695642","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-20","date_stop":"2026-05-20"},{"spend":"29.44","impressions":"15951","clicks":"179","ctr":"1.122187","cpc":"0.164469","cpm":"1.845652","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-21","date_stop":"2026-05-21"},{"spend":"26.72","impressions":"9334","clicks":"160","ctr":"1.714163","cpc":"0.167","cpm":"2.862653","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-22","date_stop":"2026-05-22"},{"spend":"28.05","impressions":"4206","clicks":"72","ctr":"1.71184","cpc":"0.389583","cpm":"6.669044","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-23","date_stop":"2026-05-23"},{"spend":"21.44","impressions":"1249","clicks":"25","ctr":"2.001601","cpc":"0.8576","cpm":"17.165733","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-24","date_stop":"2026-05-24"},{"spend":"25.66","impressions":"2928","clicks":"75","ctr":"2.561475","cpc":"0.342133","cpm":"8.763661","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-25","date_stop":"2026-05-25"},{"spend":"15.81","impressions":"1500","clicks":"66","ctr":"4.4","cpc":"0.239545","cpm":"10.54","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-26","date_stop":"2026-05-26"},{"spend":"18.43","impressions":"3894","clicks":"56","ctr":"1.43811","cpc":"0.329107","cpm":"4.732922","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-27","date_stop":"2026-05-27"}]},"google":{"status":"not_configured","note":"Install google-ads package to enable"},"apple":{"status":"not_configured","note":"OAuth keypair ready but API user role needed"}},"summary":{"total_spend_30d":322.61,"total_platforms_active":1,"last_updated":"2026-05-29T01:59:59.466Z"}};
-const AD_SPEND_NOTES = {"current_read":"Single Meta campaign active: NMS Managed Website Subscription direct offer. Spend ramping from ~$17/day to ~$33/day with steady CPC around $0.38. CTR holding at 1.54% which is within prospecting norms. No conversions tracked yet — likely due to pixel setup gap or long sales cycle for MWS.","watching":["Daily spend consistency (watching for delivery issues or frequency fatigue)","CPC creep above $0.50 — would signal audience saturation","CTR drop below 1.2% — indicates creative fatigue","Conversion tracking (currently zero recorded — need pixel/event verification)","CPM trending up (currently $5.93 — monitor for auction competition)"],"next_tests":["Google Ads integration (credentials ready, package needs install)","Apple Search Ads API access (OAuth keypair ready, need API user role)","Creative refresh test — swap hero image/copy if CTR drops","Landing page A/B for MWS offer to improve downstream conversion","Lookalike audience expansion once we have 50+ pixel events"],"status":"green","status_label":"Healthy","alert":null};
+const AD_SPEND_NOTES = {"current_read":"Single Meta campaign active: NMS Managed Website Subscription direct offer. Spend ramping from ~$17/day to ~$33/day. CTR at 1.54% (yellow/warning zone for prospecting). CPC at $0.38 is healthy (green). CPM at $5.93 is excellent (green). Zero conversions tracked — this is the critical gap. Without conversion events, we can't optimize or calculate true ROAS.","watching":["CTR stuck below 2% — prospecting benchmark is 1-2%, we need creative refresh to push green","CPC creeping toward $0.50 — currently healthy at $0.38 but watch for saturation","Conversions: ZERO recorded — need pixel setup, landing page tracking, or offline event import","ROAS: Can't calculate without conversions — estimated at ~0x currently","CPM: $5.93 is great, watch if auction competition pushes it above $15"],"next_tests":["Install Meta pixel on MWS landing page + configure lead/conversion events","Google Ads integration (credentials ready, package needs install)","Apple Search Ads API access (OAuth keypair ready, need API user role)","Creative refresh test — new hook/copy to push CTR above 2%","Landing page A/B — test headline/CTA to improve downstream conversion","Lookalike audience expansion once we have 50+ conversion events"],"status":"yellow","status_label":"Needs Attention","alert":"Zero conversions tracked in 30 days. Meta pixel setup or landing page conversion events are needed before we can optimize ROAS."};
 </script>
 <script>
 let chartInstance = null;
@@ -109,7 +117,6 @@ function fmtPct(n) {
 }
 
 async function loadData() {
-  // For static builds, AD_SPEND_DATA is embedded inline
   if (typeof AD_SPEND_DATA !== 'undefined') {
     return AD_SPEND_DATA;
   }
@@ -128,6 +135,46 @@ async function loadNotes() {
     return await res.json();
   } catch {
     return null;
+  }
+}
+
+function healthClass(metric, value) {
+  // Returns: 'healthy', 'warning', 'danger', 'neutral'
+  if (value === undefined || value === null || isNaN(value)) return 'neutral';
+  switch (metric) {
+    case 'ctr':
+      if (value >= 2.0) return 'healthy';
+      if (value >= 1.0) return 'warning';
+      return 'danger';
+    case 'cpc':
+      if (value <= 0.40) return 'healthy';
+      if (value <= 0.70) return 'warning';
+      return 'danger';
+    case 'cpm':
+      if (value <= 8.0) return 'healthy';
+      if (value <= 15.0) return 'warning';
+      return 'danger';
+    case 'conversions':
+      if (value >= 5) return 'healthy';
+      if (value >= 1) return 'warning';
+      return 'danger';
+    case 'roas':
+      if (value >= 3.0) return 'healthy';
+      if (value >= 1.5) return 'warning';
+      return 'danger';
+    default:
+      return 'neutral';
+  }
+}
+
+function normText(metric) {
+  switch (metric) {
+    case 'ctr': return 'Norm: 1-2% (prospecting)';
+    case 'cpc': return 'Norm: $0.30-$0.80 (B2B svc)';
+    case 'cpm': return 'Norm: $5-$15';
+    case 'conversions': return 'Norm: 5+/mo (lead gen)';
+    case 'roas': return 'Norm: 3x+ (break-even 1x)';
+    default: return '';
   }
 }
 
@@ -179,77 +226,93 @@ function render(data) {
   const ctr = meta.ctr || 0;
   const cpc = meta.avg_cpc || 0;
   const cpm = meta.avg_cpm || 0;
+  const conversions = meta.total_conversions_30d || 0;
+
+  // ROAS: conversion value / spend. If no conversion values, fallback to estimated
+  let roas = 0;
+  const convValue = campaigns.reduce((s, c) => s + (c.conversions_value || 0), 0);
+  if (convValue > 0 && totalSpend > 0) {
+    roas = convValue / totalSpend;
+  } else if (conversions > 0) {
+    // Rough estimate: $200 LTV per conversion for MWS
+    roas = (conversions * 200) / totalSpend;
+  }
 
   const lastDate = daily.length > 0 ? daily[daily.length - 1].date : '\u2014';
   const lastSpend = daily.length > 0 ? daily[daily.length - 1].spend : 0;
 
-  // Load notes (async already resolved by caller)
+  const ctrHealth = healthClass('ctr', ctr);
+  const cpcHealth = healthClass('cpc', cpc);
+  const cpmHealth = healthClass('cpm', cpm);
+  const convHealth = healthClass('conversions', conversions);
+  const roasHealth = healthClass('roas', roas);
+
   const notesHtml = window._opsNotesHtml || '';
 
   let html = `
   <div class="hero">
-    <div class="hero-card">
+    <div class="hero-card neutral">
       <div class="label">30-Day Spend</div>
       <div class="value">${fmtCurrency(totalSpend)}</div>
       <div class="delta">Last: ${fmtCurrency(lastSpend)} on ${lastDate}</div>
     </div>
-    <div class="hero-card">
+    <div class="hero-card neutral">
       <div class="label">Daily Avg</div>
       <div class="value">${fmtCurrency(avgDaily)}</div>
-      <div class="delta">${daily.length} days</div>
+      <div class="delta">${daily.length} days tracked</div>
     </div>
-    <div class="hero-card">
+    <div class="hero-card neutral">
       <div class="label">Active Campaigns</div>
       <div class="value">${activeCampaigns}</div>
       <div class="delta">Meta Ads</div>
     </div>
-    <div class="hero-card">
+    <div class="hero-card ${ctrHealth}">
+      <div class="health-dot ${ctrHealth}"></div>
       <div class="label">CTR</div>
       <div class="value">${fmtPct(ctr)}</div>
       <div class="delta">${fmtNumber(meta.total_clicks_30d)} clicks</div>
+      <div class="norm">${normText('ctr')}</div>
     </div>
-    <div class="hero-card">
+    <div class="hero-card ${cpcHealth}">
+      <div class="health-dot ${cpcHealth}"></div>
       <div class="label">Avg CPC</div>
       <div class="value">${fmtCurrency(cpc)}</div>
       <div class="delta">${fmtCurrency(meta.avg_cpm || 0)} CPM</div>
+      <div class="norm">${normText('cpc')}</div>
     </div>
-    <div class="hero-card">
-      <div class="label">Platforms</div>
-      <div class="value">${summary.total_platforms_active || 0}/3</div>
-      <div class="delta">${data.platforms?.google?.status === 'not_configured' ? 'Google pending' : 'Google ok'}</div>
+    <div class="hero-card ${cpmHealth}">
+      <div class="health-dot ${cpmHealth}"></div>
+      <div class="label">CPM</div>
+      <div class="value">${fmtCurrency(cpm)}</div>
+      <div class="delta">${fmtNumber(meta.total_impressions_30d)} impressions</div>
+      <div class="norm">${normText('cpm')}</div>
+    </div>
+    <div class="hero-card ${convHealth}">
+      <div class="health-dot ${convHealth}"></div>
+      <div class="label">Conversions</div>
+      <div class="value">${fmtNumber(conversions)}</div>
+      <div class="delta">${conversions === 0 ? 'None recorded' : 'Last 30 days'}</div>
+      <div class="norm">${normText('conversions')}</div>
+    </div>
+    <div class="hero-card ${roasHealth}">
+      <div class="health-dot ${roasHealth}"></div>
+      <div class="label">Est. ROAS</div>
+      <div class="value">${roas > 0 ? roas.toFixed(1) + 'x' : '\u2014'}</div>
+      <div class="delta">${roas > 0 ? 'Estimated from spend' : 'No conv. data yet'}</div>
+      <div class="norm">${normText('roas')}</div>
     </div>
   </div>
 
   ${notesHtml}
 
-  <div class="grid">
-    <div class="panel">
-      <h2>Daily Spend Trend (30 Days)</h2>
-      <div class="chart-wrap">
-        <canvas id="spendChart"></canvas>
-      </div>
-    </div>
-    <div class="panel">
-      <h2>Platform Status</h2>
-      <div class="platform">
-        <div class="dot ${daily.length > 0 ? 'active' : 'inactive'}"></div>
-        <div class="name">Meta Ads</div>
-        <div class="status">${daily.length > 0 ? fmtCurrency(totalSpend) + ' (30d)' : 'No data'}</div>
-      </div>
-      <div class="platform">
-        <div class="dot inactive"></div>
-        <div class="name">Google Ads</div>
-        <div class="status">${data.platforms?.google?.note || 'Not configured'}</div>
-      </div>
-      <div class="platform">
-        <div class="dot inactive"></div>
-        <div class="name">Apple Search Ads</div>
-        <div class="status">${data.platforms?.apple?.note || 'Not configured'}</div>
-      </div>
+  <div class="panel">
+    <h2>Daily Spend Trend (30 Days)</h2>
+    <div class="chart-wrap">
+      <canvas id="spendChart"></canvas>
     </div>
   </div>
 
-  <div class="panel">
+  <div class="panel" style="margin-top:16px;">
     <h2>Campaigns (Last 30 Days)</h2>
     <table>
       <thead>
@@ -358,7 +421,6 @@ async function refreshData() {
   btn.disabled = true;
   btn.textContent = 'Refreshing...';
   try {
-    // Reload everything including notes
     const data = await loadData();
     const notes = await loadNotes();
     window._opsNotesHtml = renderOpsCard(notes);
@@ -383,7 +445,7 @@ async function init() {
 }
 
 init();
-setInterval(init, 300000); // Auto-refresh every 5 min
+setInterval(init, 300000);
 </script>
 </body>
 </html>
