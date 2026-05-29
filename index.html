@@ -104,8 +104,8 @@
   @media (max-width: 640px) {
     .container { padding:16px 12px; }
     header h1 { font-size:18px; }
-    .hero { grid-template-columns:1fr; gap:8px; }
-    .hero-card.bn-card { grid-column:auto; }
+    .hero { grid-template-columns:repeat(2, 1fr); gap:8px; }
+    .hero-card.bn-card { grid-column:1 / -1; }
     .hero-card { padding:12px; }
     .hero-card .value { font-size:20px; }
     .hero-card .delta { font-size:11px; }
