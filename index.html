@@ -17,8 +17,9 @@
   .refresh-btn:hover { border-color:var(--accent); }
   .refresh-btn:disabled { opacity:0.5; cursor:not-allowed; }
 
-  .hero { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px; margin-bottom:24px; }
+  .hero { display:grid; grid-template-columns:repeat(6, 1fr); gap:12px; margin-bottom:24px; }
   .hero-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; position:relative; }
+  .hero-card.bn-card { grid-column:span 4; }
   .hero-card .label { font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:4px; }
   .hero-card .value { font-size:24px; font-weight:700; }
   .hero-card .delta { font-size:12px; margin-top:4px; }
@@ -85,14 +86,15 @@
   .bn-card.danger { border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.04); }
   .bn-card .bn-label { font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:6px; }
   .bn-card .bn-worst { font-size:13px; font-weight:600; color:var(--danger); }
-  .bn-card .bn-diagnosis { font-size:11px; color:var(--muted); line-height:1.4; margin-top:6px; }
+  .bn-card .bn-diagnosis { font-size:11px; color:var(--muted); line-height:1.4; margin-top:6px; word-break:break-word; }
   .bn-card .bn-diagnosis strong { color:var(--text); }
   .bn-card .bn-updated { font-size:10px; color:var(--muted); margin-top:6px; opacity:0.7; }
 
   .chart-wrap { position:relative; height:260px; }
-  table { width:100%; border-collapse:collapse; font-size:13px; }
-  th { text-align:left; padding:8px 10px; color:var(--muted); font-weight:500; border-bottom:1px solid var(--border); }
-  td { padding:8px 10px; border-bottom:1px solid var(--border); }
+  .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  table { width:100%; border-collapse:collapse; font-size:13px; min-width:520px; }
+  th { text-align:left; padding:8px 10px; color:var(--muted); font-weight:500; border-bottom:1px solid var(--border); white-space:nowrap; }
+  td { padding:8px 10px; border-bottom:1px solid var(--border); white-space:nowrap; }
   tr:last-child td { border-bottom:none; }
   .right { text-align:right; }
 
@@ -100,8 +102,19 @@
   .error { text-align:center; padding:40px; color:var(--danger); }
 
   @media (max-width: 640px) {
-    .hero { grid-template-columns:repeat(2, 1fr); }
-    .grid { grid-template-columns:1fr; }
+    .container { padding:16px 12px; }
+    header h1 { font-size:18px; }
+    .hero { grid-template-columns:1fr; gap:8px; }
+    .hero-card.bn-card { grid-column:auto; }
+    .hero-card { padding:12px; }
+    .hero-card .value { font-size:20px; }
+    .hero-card .delta { font-size:11px; }
+    .hero-card .norm { display:none; }
+    .grid { grid-template-columns:1fr; gap:12px; }
+    .panel { padding:12px; }
+    .ops-panel { padding:12px; }
+    .chart-wrap { height:200px; }
+    th, td { padding:6px 8px; font-size:12px; }
   }
 </style>
 </head>
@@ -341,28 +354,30 @@ function render(data) {
 
   <div class="panel">
     <h2>Campaigns (Last 30 Days)</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Campaign</th>
-          <th class="right">Spend</th>
-          <th class="right">Clicks</th>
-          <th class="right">Impressions</th>
-          <th class="right">Conv.</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${campaigns.map(c => `
-        <tr>
-          <td>${c.name}</td>
-          <td class="right">${fmtCurrency(c.spend)}</td>
-          <td class="right">${fmtNumber(c.clicks)}</td>
-          <td class="right">${fmtNumber(c.impressions)}</td>
-          <td class="right">${fmtNumber(c.conversions)}</td>
-        </tr>
-        `).join('')}
-      </tbody>
-    </table>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Campaign</th>
+            <th class="right">Spend</th>
+            <th class="right">Clicks</th>
+            <th class="right">Impressions</th>
+            <th class="right">Conv.</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${campaigns.map(c => `
+          <tr>
+            <td>${c.name}</td>
+            <td class="right">${fmtCurrency(c.spend)}</td>
+            <td class="right">${fmtNumber(c.clicks)}</td>
+            <td class="right">${fmtNumber(c.impressions)}</td>
+            <td class="right">${fmtNumber(c.conversions)}</td>
+          </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
   </div>
   `;
 
