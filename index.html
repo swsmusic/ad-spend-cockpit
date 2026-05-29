@@ -62,6 +62,25 @@
   .ops-panel .ops-alert { background:rgba(245,158,11,0.08); border-left:3px solid var(--warn); padding:8px 12px; border-radius:0 4px 4px 0; margin-top:8px; }
   .ops-panel .ops-alert p { font-size:12px; color:var(--warn); margin:0; }
 
+  /* Bottleneck funnel */
+  .bn-panel { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:24px; }
+  .bn-panel h2 { font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:12px; }
+  .bn-label { font-size:11px; color:var(--muted); margin-bottom:8px; }
+  .bn-funnel { display:flex; align-items:flex-end; gap:4px; height:140px; padding-bottom:28px; position:relative; }
+  .bn-stage { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; min-width:60px; }
+  .bn-bar { width:100%; border-radius:4px 4px 0 0; transition:all 0.3s; position:relative; }
+  .bn-bar.healthy { background:rgba(34,197,94,0.5); }
+  .bn-bar.warning { background:rgba(245,158,11,0.5); }
+  .bn-bar.danger { background:rgba(239,68,68,0.6); }
+  .bn-bar.neutral { background:rgba(59,130,246,0.4); }
+  .bn-stage-name { font-size:10px; color:var(--muted); text-align:center; margin-top:6px; position:absolute; bottom:-26px; left:0; right:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .bn-stage-value { font-size:11px; font-weight:600; color:var(--text); text-align:center; margin-top:4px; position:absolute; top:-18px; left:0; right:0; }
+  .bn-drop { position:absolute; bottom:-14px; left:50%; transform:translateX(-50%); font-size:9px; color:var(--muted); white-space:nowrap; }
+  .bn-drop.bad { color:var(--danger); font-weight:600; }
+  .bn-diagnosis { font-size:12px; color:var(--muted); line-height:1.5; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+  .bn-diagnosis strong { color:var(--text); }
+  .bn-worst { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; padding:2px 8px; border-radius:10px; background:rgba(239,68,68,0.1); color:var(--danger); margin-left:8px; }
+
   .chart-wrap { position:relative; height:260px; }
   table { width:100%; border-collapse:collapse; font-size:13px; }
   th { text-align:left; padding:8px 10px; color:var(--muted); font-weight:500; border-bottom:1px solid var(--border); }
@@ -95,7 +114,7 @@
 
 <script>
 const AD_SPEND_DATA = {"collected_at":"2026-05-29T01:59:59.466Z","platforms":{"meta":{"account_name":"NorthMac Services","account_id":"act_599729284106099","currency":"USD","active_campaigns":1,"total_spend_30d":322.61,"total_clicks_30d":840,"total_impressions_30d":54440,"total_conversions_30d":0,"avg_cpc":0.38,"avg_cpm":5.93,"ctr":1.54,"daily":[{"date":"2026-05-14","spend":17.18,"clicks":9,"impressions":482,"conversions":0},{"date":"2026-05-15","spend":23.58,"clicks":8,"impressions":532,"conversions":0},{"date":"2026-05-16","spend":18.53,"clicks":10,"impressions":235,"conversions":0},{"date":"2026-05-17","spend":33.27,"clicks":12,"impressions":584,"conversions":0},{"date":"2026-05-18","spend":24.79,"clicks":9,"impressions":486,"conversions":0},{"date":"2026-05-19","spend":17.09,"clicks":5,"impressions":220,"conversions":0},{"date":"2026-05-20","spend":22.62,"clicks":154,"impressions":12839,"conversions":0},{"date":"2026-05-21","spend":29.44,"clicks":179,"impressions":15951,"conversions":0},{"date":"2026-05-22","spend":26.72,"clicks":160,"impressions":9334,"conversions":0},{"date":"2026-05-23","spend":28.05,"clicks":72,"impressions":4206,"conversions":0},{"date":"2026-05-24","spend":21.44,"clicks":25,"impressions":1249,"conversions":0},{"date":"2026-05-25","spend":25.66,"clicks":75,"impressions":2928,"conversions":0},{"date":"2026-05-26","spend":15.81,"clicks":66,"impressions":1500,"conversions":0},{"date":"2026-05-27","spend":18.43,"clicks":56,"impressions":3894,"conversions":0}],"campaigns":[{"name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","spend":187.3,"clicks":786,"impressions":51889,"conversions":0},{"name":"NMS - Better Jobs Audit - Discovery - NC","spend":135.31,"clicks":54,"impressions":2551,"conversions":0}],"raw_insights":[{"spend":"17.18","impressions":"482","clicks":"9","ctr":"1.86722","cpc":"1.908889","cpm":"35.643154","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-14","date_stop":"2026-05-14"},{"spend":"23.58","impressions":"532","clicks":"8","ctr":"1.503759","cpc":"2.9475","cpm":"44.323308","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-15","date_stop":"2026-05-15"},{"spend":"18.53","impressions":"235","clicks":"10","ctr":"4.255319","cpc":"1.853","cpm":"78.851064","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-16","date_stop":"2026-05-16"},{"spend":"33.27","impressions":"584","clicks":"12","ctr":"2.054795","cpc":"2.7725","cpm":"56.969178","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-17","date_stop":"2026-05-17"},{"spend":"24.79","impressions":"486","clicks":"9","ctr":"1.851852","cpc":"2.754444","cpm":"51.00823","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-18","date_stop":"2026-05-18"},{"spend":"17.09","impressions":"220","clicks":"5","ctr":"2.272727","cpc":"3.418","cpm":"77.681818","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-19","date_stop":"2026-05-19"},{"spend":"0.87","impressions":"12","clicks":"1","ctr":"8.333333","cpc":"0.87","cpm":"72.5","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-20","date_stop":"2026-05-20"},{"spend":"21.75","impressions":"12827","clicks":"153","ctr":"1.192796","cpc":"0.142157","cpm":"1.695642","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-20","date_stop":"2026-05-20"},{"spend":"29.44","impressions":"15951","clicks":"179","ctr":"1.122187","cpc":"0.164469","cpm":"1.845652","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-21","date_stop":"2026-05-21"},{"spend":"26.72","impressions":"9334","clicks":"160","ctr":"1.714163","cpc":"0.167","cpm":"2.862653","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-22","date_stop":"2026-05-22"},{"spend":"28.05","impressions":"4206","clicks":"72","ctr":"1.71184","cpc":"0.389583","cpm":"6.669044","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-23","date_stop":"2026-05-23"},{"spend":"21.44","impressions":"1249","clicks":"25","ctr":"2.001601","cpc":"0.8576","cpm":"17.165733","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-24","date_stop":"2026-05-24"},{"spend":"25.66","impressions":"2928","clicks":"75","ctr":"2.561475","cpc":"0.342133","cpm":"8.763661","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-25","date_stop":"2026-05-25"},{"spend":"15.81","impressions":"1500","clicks":"66","ctr":"4.4","cpc":"0.239545","cpm":"10.54","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-26","date_stop":"2026-05-26"},{"spend":"18.43","impressions":"3894","clicks":"56","ctr":"1.43811","cpc":"0.329107","cpm":"4.732922","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-27","date_stop":"2026-05-27"}]},"google":{"status":"not_configured","note":"Install google-ads package to enable"},"apple":{"status":"not_configured","note":"OAuth keypair ready but API user role needed"}},"summary":{"total_spend_30d":322.61,"total_platforms_active":1,"last_updated":"2026-05-29T01:59:59.466Z"}};
-const AD_SPEND_NOTES = {"headline":"Managed Website Subscription — prospecting test in flight. Zero purchases yet; judging by upstream funnel movement.","status":"yellow","status_label":"Learning","alert":null,"watching":["Funnel: 74 views → 14 CTA clicks → 14 checkout intent → 0 purchase. Checkout intent is the new bottleneck.","A/B: Variant B (0.30% CTA rate, scroll depth 3.0) beating A (0.00%, depth 2.1). B is control-worthy.","Meta health: CTR 2.21%, CPM $6.31, freq 3.21. Creative not fatigued yet.","Commercial Audit: PAUSED. 2 CRM leads routed. No paid spend."],"next_tests":["Fix checkout-intent → purchase gap (message-match or payment friction)","Scale B variant; freeze A","Hook/Story/Offer: test headline/CTA above the fold before creative churn","Retargeting readiness check once 50+ pixel events"]};
+const AD_SPEND_NOTES = {"headline":"Managed Website Subscription — prospecting test in flight. Zero purchases yet; judging by upstream funnel movement.","status":"yellow","status_label":"Learning","alert":null,"watching":["Funnel: 74 views → 14 CTA clicks → 14 checkout intent → 0 purchase. Checkout intent is the new bottleneck.","A/B: Variant B (0.30% CTA rate, scroll depth 3.0) beating A (0.00%, depth 2.1). B is control-worthy.","Meta health: CTR 2.21%, CPM $6.31, freq 3.21. Creative not fatigued yet.","Commercial Audit: PAUSED. 2 CRM leads routed. No paid spend."],"next_tests":["Fix checkout-intent → purchase gap (message-match or payment friction)","Scale B variant; freeze A","Hook/Story/Offer: test headline/CTA above the fold before creative churn","Retargeting readiness check once 50+ pixel events"],"bottleneck":{"funnel_label":"NMS Managed Website Subscription (7-day)","stages":[{"name":"Impressions","value":54440,"period":"30d"},{"name":"Clicks","value":840,"period":"30d"},{"name":"Start Page","value":616,"period":"7d"},{"name":"Funnel View","value":74,"period":"7d"},{"name":"CTA Click","value":14,"period":"7d"},{"name":"Checkout","value":14,"period":"7d"},{"name":"Purchase","value":0,"period":"7d"}],"drops":[{"from":"Impressions","to":"Clicks","rate":1.54},{"from":"Clicks","to":"Start Page","rate":73.33},{"from":"Start Page","to":"Funnel View","rate":12.01},{"from":"Funnel View","to":"CTA Click","rate":18.92},{"from":"CTA Click","to":"Checkout","rate":100},{"from":"Checkout","to":"Purchase","rate":0}],"worst_drop":{"from":"Checkout","to":"Purchase","rate":0,"label":"100% drop-off"},"second_worst":{"from":"Start Page","to":"Funnel View","rate":12.01,"label":"88% drop-off"},"diagnosis":"Checkout intent → Purchase is the critical bottleneck (0% conversion). Second: Start page → Funnel view (88% drop). Fix payment friction/message-match before scaling spend.","updated":"2026-05-28"}};
 </script>
 <script>
 let chartInstance = null;
@@ -196,6 +215,64 @@ function renderOpsPanel(notes) {
   `;
 }
 
+function renderBottleneck(notes) {
+  const bn = notes?.bottleneck;
+  if (!bn || !bn.stages || bn.stages.length < 2) return '';
+
+  const maxVal = Math.max(...bn.stages.map(s => s.value || 0));
+  const worst = bn.worst_drop;
+
+  // Determine bar heights (log scale for wide ranges)
+  const heights = bn.stages.map(s => {
+    const v = s.value || 0;
+    if (maxVal === 0) return 10;
+    const pct = v / maxVal;
+    return Math.max(10, Math.round(pct * 120));
+  });
+
+  // Build drop labels between stages
+  let dropsHtml = '';
+  if (bn.drops && bn.drops.length > 0) {
+    dropsHtml = bn.drops.map((d, i) => {
+      const isBad = d.rate <= 15 || (worst && d.from === worst.from && d.to === worst.to);
+      const cls = isBad ? 'bn-drop bad' : 'bn-drop';
+      return `<span class="${cls}">${d.rate.toFixed(d.rate < 10 ? 1 : 0)}%</span>`;
+    }).join('');
+  }
+
+  // Build stage bars
+  const stagesHtml = bn.stages.map((s, i) => {
+    const h = heights[i];
+    // Color the worst stage and its neighbor red, others neutral
+    let barCls = 'bn-bar neutral';
+    if (worst) {
+      const worstIdx = bn.stages.findIndex(st => st.name === worst.to);
+      if (worstIdx >= 0 && (i === worstIdx || i === worstIdx - 1)) {
+        barCls = 'bn-bar danger';
+      }
+    }
+    return `
+    <div class="bn-stage">
+      <div class="bn-stage-value">${s.value >= 1000 ? (s.value/1000).toFixed(1) + 'K' : s.value}</div>
+      <div class="bn-bar ${barCls}" style="height:${h}px;"></div>
+      <div class="bn-stage-name">${s.name}</div>
+    </div>`;
+  }).join('');
+
+  const worstBadge = worst ? `<span class="bn-worst">\u26a0 ${worst.label || 'Bottleneck'}</span>` : '';
+
+  return `
+  <div class="bn-panel">
+    <h2>Bottleneck Analysis ${worstBadge}</h2>
+    <div class="bn-label">${bn.funnel_label || 'Funnel'} \u00b7 Updated ${bn.updated || ''}</div>
+    <div class="bn-funnel">
+      ${stagesHtml}
+    </div>
+    <div class="bn-diagnosis"><strong>Diagnosis:</strong> ${bn.diagnosis || 'No diagnosis available.'}</div>
+  </div>
+  `;
+}
+
 function render(data) {
   const meta = data.platforms?.meta || {};
   const summary = data.summary || {};
@@ -228,6 +305,7 @@ function render(data) {
   const roasHealth = healthClass('roas', roas);
 
   const opsHtml = window._opsNotesHtml || '';
+  const bnHtml = window._bottleneckHtml || '';
 
   let html = `
   <div class="hero">
@@ -283,6 +361,8 @@ function render(data) {
     </div>
   </div>
 
+  ${bnHtml}
+
   <div class="grid">
     <div class="panel">
       <h2>Daily Spend Trend (30 Days)</h2>
@@ -291,7 +371,7 @@ function render(data) {
       </div>
     </div>
     ${opsHtml}
-  </div>
+  </div>`,
 
   <div class="panel">
     <h2>Campaigns (Last 30 Days)</h2>
@@ -404,6 +484,7 @@ async function refreshData() {
     const data = await loadData();
     const notes = await loadNotes();
     window._opsNotesHtml = renderOpsPanel(notes);
+    window._bottleneckHtml = renderBottleneck(notes);
     render(data);
   } catch (e) {
     document.getElementById('content').innerHTML = `<div class="error">Error: ${e.message}</div>`;
@@ -418,6 +499,7 @@ async function init() {
     const data = await loadData();
     const notes = await loadNotes();
     window._opsNotesHtml = renderOpsPanel(notes);
+    window._bottleneckHtml = renderBottleneck(notes);
     render(data);
   } catch (e) {
     document.getElementById('content').innerHTML = `<div class="error">Error loading data: ${e.message}</div>`;
