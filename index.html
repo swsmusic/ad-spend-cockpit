@@ -251,14 +251,18 @@ function renderBottleneckCard(notes) {
   const secondFrom = second?.from || '';
 
   const bars = bn.stages.map((s, i) => {
-    const pct = maxVal > 0 ? Math.max((s.value / maxVal) * 100, 2) : 2;
+    // Use log scale so drop-off is visible without crushing small values to nothing
+    const logMax = Math.log10(Math.max(maxVal, 1));
+    const logVal = Math.log10(Math.max(s.value, 1));
+    const pct = maxVal > 0 ? Math.max((logVal / logMax) * 100, 4) : 4;
+    const barH = Math.max(pct * 1.1, 5);
     const isDanger = s.name === worstFrom || s.name === secondFrom;
     const dropInfo = bn.drops?.find(d => d.to === s.name);
     const dropLabel = dropInfo && dropInfo.rate < 50 ? `-${(100 - dropInfo.rate).toFixed(0)}%` : '';
 
     return `
       <div class="bn-stage">
-        <div class="bn-bar ${isDanger ? 'danger' : pct > 50 ? 'neutral' : 'warning'}" style="height:${pct * 1.2}px;"></div>
+        <div class="bn-bar ${isDanger ? 'danger' : pct > 50 ? 'neutral' : 'warning'}" style="height:${barH}px;"></div>
         <div class="bn-stage-val">${s.value === 0 ? '0' : s.value >= 1000 ? (s.value / 1000).toFixed(1) + 'K' : s.value}</div>
         <div class="bn-stage-name">${s.name}</div>
         ${dropLabel ? `<div class="bn-drop-label">${dropLabel}</div>` : ''}
