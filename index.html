@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ad Spend Cockpit</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root { --bg:#0b0d14; --card:#12141d; --border:#1e2030; --text:#c8cdd9; --muted:#6b7280; --accent:#3b82f6; --accent2:#22c55e; --accent3:#f59e0b; --danger:#ef4444; --warn:#f59e0b; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; line-height:1.5; }
+  .container { max-width:1200px; margin:0 auto; padding:24px 16px; }
+  header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
+  header h1 { font-size:22px; font-weight:600; letter-spacing:-0.3px; }
+  header .meta { font-size:12px; color:var(--muted); }
+  .refresh-btn { background:var(--card); border:1px solid var(--border); color:var(--text); padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px; }
+  .refresh-btn:hover { border-color:var(--accent); }
+  .refresh-btn:disabled { opacity:0.5; cursor:not-allowed; }
+
+  .hero { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px; margin-bottom:24px; }
+  .hero-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; }
+  .hero-card .label { font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:4px; }
+  .hero-card .value { font-size:24px; font-weight:700; }
+  .hero-card .delta { font-size:12px; margin-top:4px; }
+  .hero-card .delta.pos { color:var(--accent2); }
+  .hero-card .delta.neg { color:var(--danger); }
+
+  .ops-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px; margin-bottom:24px; }
+  .ops-card .ops-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+  .ops-card .ops-status { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; padding:4px 10px; border-radius:20px; }
+  .ops-card .ops-status.green { background:rgba(34,197,94,0.12); color:var(--accent2); }
+  .ops-card .ops-status.yellow { background:rgba(245,158,11,0.12); color:var(--warn); }
+  .ops-card .ops-status.red { background:rgba(239,68,68,0.12); color:var(--danger); }
+  .ops-card .ops-status .dot { width:7px; height:7px; border-radius:50%; }
+  .ops-card .ops-status.green .dot { background:var(--accent2); }
+  .ops-card .ops-status.yellow .dot { background:var(--warn); }
+  .ops-card .ops-status.red .dot { background:var(--danger); }
+  .ops-card h2 { font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin:0; }
+
+  .ops-section { margin-bottom:16px; }
+  .ops-section:last-child { margin-bottom:0; }
+  .ops-section h3 { font-size:13px; font-weight:600; color:var(--text); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .ops-section p { font-size:13px; color:var(--muted); line-height:1.6; }
+  .ops-section ul { list-style:none; padding:0; margin:0; }
+  .ops-section li { font-size:13px; color:var(--muted); padding:5px 0 5px 20px; position:relative; line-height:1.5; }
+  .ops-section li::before { content:"\2022"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+  .ops-alert { background:rgba(245,158,11,0.08); border-left:3px solid var(--warn); padding:12px 16px; border-radius:0 6px 6px 0; margin-top:12px; }
+  .ops-alert p { font-size:13px; color:var(--warn); margin:0; }
+
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:16px; margin-bottom:24px; }
+  .panel { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; }
+  .panel h2 { font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:12px; }
+
+  .chart-wrap { position:relative; height:240px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { text-align:left; padding:8px 10px; color:var(--muted); font-weight:500; border-bottom:1px solid var(--border); }
+  td { padding:8px 10px; border-bottom:1px solid var(--border); }
+  tr:last-child td { border-bottom:none; }
+  .right { text-align:right; }
+  .platform { display:flex; align-items:center; gap:8px; margin-bottom:8px; padding:10px; background:rgba(255,255,255,0.02); border-radius:6px; }
+  .platform .dot { width:8px; height:8px; border-radius:50%; }
+  .platform .dot.active { background:var(--accent2); }
+  .platform .dot.inactive { background:var(--muted); }
+  .platform .name { font-weight:500; }
+  .platform .status { font-size:12px; color:var(--muted); margin-left:auto; }
+
+  .loading { text-align:center; padding:40px; color:var(--muted); }
+  .error { text-align:center; padding:40px; color:var(--danger); }
+
+  @media (max-width: 640px) {
+    .hero { grid-template-columns:repeat(2, 1fr); }
+    .grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <h1>Ad Spend Cockpit</h1>
+      <div class="meta" id="last-updated">Loading...</div>
+    </div>
+    <button class="refresh-btn" id="refresh-btn" onclick="refreshData()">Refresh</button>
+  </header>
+
+  <div id="content">
+    <div class="loading">Loading ad spend data...</div>
+  </div>
+</div>
+
+<script>
+const AD_SPEND_DATA = {"collected_at":"2026-05-29T01:59:59.466Z","platforms":{"meta":{"account_name":"NorthMac Services","account_id":"act_599729284106099","currency":"USD","active_campaigns":1,"total_spend_30d":322.61,"total_clicks_30d":840,"total_impressions_30d":54440,"total_conversions_30d":0,"avg_cpc":0.38,"avg_cpm":5.93,"ctr":1.54,"daily":[{"date":"2026-05-14","spend":17.18,"clicks":9,"impressions":482,"conversions":0},{"date":"2026-05-15","spend":23.58,"clicks":8,"impressions":532,"conversions":0},{"date":"2026-05-16","spend":18.53,"clicks":10,"impressions":235,"conversions":0},{"date":"2026-05-17","spend":33.27,"clicks":12,"impressions":584,"conversions":0},{"date":"2026-05-18","spend":24.79,"clicks":9,"impressions":486,"conversions":0},{"date":"2026-05-19","spend":17.09,"clicks":5,"impressions":220,"conversions":0},{"date":"2026-05-20","spend":22.62,"clicks":154,"impressions":12839,"conversions":0},{"date":"2026-05-21","spend":29.44,"clicks":179,"impressions":15951,"conversions":0},{"date":"2026-05-22","spend":26.72,"clicks":160,"impressions":9334,"conversions":0},{"date":"2026-05-23","spend":28.05,"clicks":72,"impressions":4206,"conversions":0},{"date":"2026-05-24","spend":21.44,"clicks":25,"impressions":1249,"conversions":0},{"date":"2026-05-25","spend":25.66,"clicks":75,"impressions":2928,"conversions":0},{"date":"2026-05-26","spend":15.81,"clicks":66,"impressions":1500,"conversions":0},{"date":"2026-05-27","spend":18.43,"clicks":56,"impressions":3894,"conversions":0}],"campaigns":[{"name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","spend":187.3,"clicks":786,"impressions":51889,"conversions":0},{"name":"NMS - Better Jobs Audit - Discovery - NC","spend":135.31,"clicks":54,"impressions":2551,"conversions":0}],"raw_insights":[{"spend":"17.18","impressions":"482","clicks":"9","ctr":"1.86722","cpc":"1.908889","cpm":"35.643154","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-14","date_stop":"2026-05-14"},{"spend":"23.58","impressions":"532","clicks":"8","ctr":"1.503759","cpc":"2.9475","cpm":"44.323308","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-15","date_stop":"2026-05-15"},{"spend":"18.53","impressions":"235","clicks":"10","ctr":"4.255319","cpc":"1.853","cpm":"78.851064","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-16","date_stop":"2026-05-16"},{"spend":"33.27","impressions":"584","clicks":"12","ctr":"2.054795","cpc":"2.7725","cpm":"56.969178","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-17","date_stop":"2026-05-17"},{"spend":"24.79","impressions":"486","clicks":"9","ctr":"1.851852","cpc":"2.754444","cpm":"51.00823","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-18","date_stop":"2026-05-18"},{"spend":"17.09","impressions":"220","clicks":"5","ctr":"2.272727","cpc":"3.418","cpm":"77.681818","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-19","date_stop":"2026-05-19"},{"spend":"0.87","impressions":"12","clicks":"1","ctr":"8.333333","cpc":"0.87","cpm":"72.5","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-20","date_stop":"2026-05-20"},{"spend":"21.75","impressions":"12827","clicks":"153","ctr":"1.192796","cpc":"0.142157","cpm":"1.695642","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-20","date_stop":"2026-05-20"},{"spend":"29.44","impressions":"15951","clicks":"179","ctr":"1.122187","cpc":"0.164469","cpm":"1.845652","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-21","date_stop":"2026-05-21"},{"spend":"26.72","impressions":"9334","clicks":"160","ctr":"1.714163","cpc":"0.167","cpm":"2.862653","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-22","date_stop":"2026-05-22"},{"spend":"28.05","impressions":"4206","clicks":"72","ctr":"1.71184","cpc":"0.389583","cpm":"6.669044","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-23","date_stop":"2026-05-23"},{"spend":"21.44","impressions":"1249","clicks":"25","ctr":"2.001601","cpc":"0.8576","cpm":"17.165733","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-24","date_stop":"2026-05-24"},{"spend":"25.66","impressions":"2928","clicks":"75","ctr":"2.561475","cpc":"0.342133","cpm":"8.763661","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-25","date_stop":"2026-05-25"},{"spend":"15.81","impressions":"1500","clicks":"66","ctr":"4.4","cpc":"0.239545","cpm":"10.54","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-26","date_stop":"2026-05-26"},{"spend":"18.43","impressions":"3894","clicks":"56","ctr":"1.43811","cpc":"0.329107","cpm":"4.732922","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-27","date_stop":"2026-05-27"}]},"google":{"status":"not_configured","note":"Install google-ads package to enable"},"apple":{"status":"not_configured","note":"OAuth keypair ready but API user role needed"}},"summary":{"total_spend_30d":322.61,"total_platforms_active":1,"last_updated":"2026-05-29T01:59:59.466Z"}};
+const AD_SPEND_NOTES = {"current_read":"Single Meta campaign active: NMS Managed Website Subscription direct offer. Spend ramping from ~$17/day to ~$33/day with steady CPC around $0.38. CTR holding at 1.54% which is within prospecting norms. No conversions tracked yet — likely due to pixel setup gap or long sales cycle for MWS.","watching":["Daily spend consistency (watching for delivery issues or frequency fatigue)","CPC creep above $0.50 — would signal audience saturation","CTR drop below 1.2% — indicates creative fatigue","Conversion tracking (currently zero recorded — need pixel/event verification)","CPM trending up (currently $5.93 — monitor for auction competition)"],"next_tests":["Google Ads integration (credentials ready, package needs install)","Apple Search Ads API access (OAuth keypair ready, need API user role)","Creative refresh test — swap hero image/copy if CTR drops","Landing page A/B for MWS offer to improve downstream conversion","Lookalike audience expansion once we have 50+ pixel events"],"status":"green","status_label":"Healthy","alert":null};
+</script>
+<script>
+let chartInstance = null;
+
+function fmtCurrency(n) {
+  if (n === undefined || n === null) return '\u2014';
+  return '$' + Number(n).toFixed(2);
+}
+function fmtNumber(n) {
+  if (n === undefined || n === null) return '\u2014';
+  return Number(n).toLocaleString();
+}
+function fmtPct(n) {
+  if (n === undefined || n === null) return '\u2014';
+  return Number(n).toFixed(2) + '%';
+}
+
+async function loadData() {
+  // For static builds, AD_SPEND_DATA is embedded inline
+  if (typeof AD_SPEND_DATA !== 'undefined') {
+    return AD_SPEND_DATA;
+  }
+  const res = await fetch('/api/ad-spend');
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return await res.json();
+}
+
+async function loadNotes() {
+  if (typeof AD_SPEND_NOTES !== 'undefined') {
+    return AD_SPEND_NOTES;
+  }
+  try {
+    const res = await fetch('/api/ad-spend-notes');
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+function renderOpsCard(notes) {
+  if (!notes) return '';
+  const statusClass = notes.status || 'green';
+  const statusLabel = notes.status_label || 'Healthy';
+  const alertHtml = notes.alert ? `<div class="ops-alert"><p>${notes.alert}</p></div>` : '';
+
+  const watchingList = (notes.watching || []).map(w => `<li>${w}</li>`).join('');
+  const testsList = (notes.next_tests || []).map(t => `<li>${t}</li>`).join('');
+
+  return `
+  <div class="ops-card">
+    <div class="ops-header">
+      <h2>Ops Read</h2>
+      <span class="ops-status ${statusClass}"><span class="dot"></span> ${statusLabel}</span>
+    </div>
+
+    <div class="ops-section">
+      <h3>\ud83d\udcd6 Current Read</h3>
+      <p>${notes.current_read || 'No read available.'}</p>
+    </div>
+
+    <div class="ops-section">
+      <h3>\ud83d\udc41\ufe0f Watching</h3>
+      <ul>${watchingList || '<li>Nothing specific on watch.</li>'}</ul>
+    </div>
+
+    <div class="ops-section">
+      <h3>\ud83e\uddea Next Tests</h3>
+      <ul>${testsList || '<li>No tests planned.</li>'}</ul>
+    </div>
+
+    ${alertHtml}
+  </div>
+  `;
+}
+
+function render(data) {
+  const meta = data.platforms?.meta || {};
+  const summary = data.summary || {};
+  const daily = meta.daily || [];
+  const campaigns = meta.campaigns || [];
+
+  const totalSpend = meta.total_spend_30d || 0;
+  const avgDaily = daily.length > 0 ? totalSpend / daily.length : 0;
+  const activeCampaigns = meta.active_campaigns || 0;
+  const ctr = meta.ctr || 0;
+  const cpc = meta.avg_cpc || 0;
+  const cpm = meta.avg_cpm || 0;
+
+  const lastDate = daily.length > 0 ? daily[daily.length - 1].date : '\u2014';
+  const lastSpend = daily.length > 0 ? daily[daily.length - 1].spend : 0;
+
+  // Load notes (async already resolved by caller)
+  const notesHtml = window._opsNotesHtml || '';
+
+  let html = `
+  <div class="hero">
+    <div class="hero-card">
+      <div class="label">30-Day Spend</div>
+      <div class="value">${fmtCurrency(totalSpend)}</div>
+      <div class="delta">Last: ${fmtCurrency(lastSpend)} on ${lastDate}</div>
+    </div>
+    <div class="hero-card">
+      <div class="label">Daily Avg</div>
+      <div class="value">${fmtCurrency(avgDaily)}</div>
+      <div class="delta">${daily.length} days</div>
+    </div>
+    <div class="hero-card">
+      <div class="label">Active Campaigns</div>
+      <div class="value">${activeCampaigns}</div>
+      <div class="delta">Meta Ads</div>
+    </div>
+    <div class="hero-card">
+      <div class="label">CTR</div>
+      <div class="value">${fmtPct(ctr)}</div>
+      <div class="delta">${fmtNumber(meta.total_clicks_30d)} clicks</div>
+    </div>
+    <div class="hero-card">
+      <div class="label">Avg CPC</div>
+      <div class="value">${fmtCurrency(cpc)}</div>
+      <div class="delta">${fmtCurrency(meta.avg_cpm || 0)} CPM</div>
+    </div>
+    <div class="hero-card">
+      <div class="label">Platforms</div>
+      <div class="value">${summary.total_platforms_active || 0}/3</div>
+      <div class="delta">${data.platforms?.google?.status === 'not_configured' ? 'Google pending' : 'Google ok'}</div>
+    </div>
+  </div>
+
+  ${notesHtml}
+
+  <div class="grid">
+    <div class="panel">
+      <h2>Daily Spend Trend (30 Days)</h2>
+      <div class="chart-wrap">
+        <canvas id="spendChart"></canvas>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Platform Status</h2>
+      <div class="platform">
+        <div class="dot ${daily.length > 0 ? 'active' : 'inactive'}"></div>
+        <div class="name">Meta Ads</div>
+        <div class="status">${daily.length > 0 ? fmtCurrency(totalSpend) + ' (30d)' : 'No data'}</div>
+      </div>
+      <div class="platform">
+        <div class="dot inactive"></div>
+        <div class="name">Google Ads</div>
+        <div class="status">${data.platforms?.google?.note || 'Not configured'}</div>
+      </div>
+      <div class="platform">
+        <div class="dot inactive"></div>
+        <div class="name">Apple Search Ads</div>
+        <div class="status">${data.platforms?.apple?.note || 'Not configured'}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Campaigns (Last 30 Days)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Campaign</th>
+          <th class="right">Spend</th>
+          <th class="right">Clicks</th>
+          <th class="right">Impressions</th>
+          <th class="right">Conv.</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${campaigns.map(c => `
+        <tr>
+          <td>${c.name}</td>
+          <td class="right">${fmtCurrency(c.spend)}</td>
+          <td class="right">${fmtNumber(c.clicks)}</td>
+          <td class="right">${fmtNumber(c.impressions)}</td>
+          <td class="right">${fmtNumber(c.conversions)}</td>
+        </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  </div>
+  `;
+
+  document.getElementById('content').innerHTML = html;
+  document.getElementById('last-updated').textContent = 'Updated: ' + new Date(data.collected_at).toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' EST';
+
+  // Render chart
+  const ctx = document.getElementById('spendChart').getContext('2d');
+  if (chartInstance) chartInstance.destroy();
+
+  const labels = daily.map(d => d.date.slice(5)); // MM-DD
+  const spendData = daily.map(d => d.spend);
+  const clickData = daily.map(d => d.clicks);
+
+  chartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Spend ($)',
+          data: spendData,
+          backgroundColor: 'rgba(59, 130, 246, 0.6)',
+          borderColor: 'rgba(59, 130, 246, 1)',
+          borderWidth: 1,
+          yAxisID: 'y',
+        },
+        {
+          label: 'Clicks',
+          data: clickData,
+          type: 'line',
+          borderColor: 'rgba(34, 197, 94, 0.8)',
+          backgroundColor: 'rgba(34, 197, 94, 0.1)',
+          borderWidth: 2,
+          pointRadius: 2,
+          yAxisID: 'y1',
+          tension: 0.3,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { color: '#c8cdd9', font: { size: 11 } } },
+        tooltip: {
+          backgroundColor: '#12141d',
+          titleColor: '#c8cdd9',
+          bodyColor: '#c8cdd9',
+          borderColor: '#1e2030',
+          borderWidth: 1,
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#6b7280', font: { size: 10 }, maxRotation: 45 },
+          grid: { color: '#1e2030' }
+        },
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          ticks: { color: '#6b7280', font: { size: 10 }, callback: v => '$' + v },
+          grid: { color: '#1e2030' },
+          title: { display: true, text: 'Spend', color: '#6b7280', font: { size: 10 } }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          ticks: { color: '#6b7280', font: { size: 10 } },
+          grid: { drawOnChartArea: false },
+          title: { display: true, text: 'Clicks', color: '#6b7280', font: { size: 10 } }
+        }
+      }
+    }
+  });
+}
+
+async function refreshData() {
+  const btn = document.getElementById('refresh-btn');
+  btn.disabled = true;
+  btn.textContent = 'Refreshing...';
+  try {
+    // Reload everything including notes
+    const data = await loadData();
+    const notes = await loadNotes();
+    window._opsNotesHtml = renderOpsCard(notes);
+    render(data);
+  } catch (e) {
+    document.getElementById('content').innerHTML = `<div class="error">Error: ${e.message}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Refresh';
+  }
+}
+
+async function init() {
+  try {
+    const data = await loadData();
+    const notes = await loadNotes();
+    window._opsNotesHtml = renderOpsCard(notes);
+    render(data);
+  } catch (e) {
+    document.getElementById('content').innerHTML = `<div class="error">Error loading data: ${e.message}</div>`;
+  }
+}
+
+init();
+setInterval(init, 300000); // Auto-refresh every 5 min
+</script>
+</body>
+</html>
