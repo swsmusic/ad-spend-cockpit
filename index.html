@@ -27,7 +27,6 @@
   .hero-card .norm { font-size:10px; color:var(--muted); margin-top:4px; opacity:0.8; }
   .hero-card .norm strong { color:var(--text); }
 
-  /* Health indicators */
   .hero-card.healthy { border-color:rgba(34,197,94,0.3); background:rgba(34,197,94,0.04); }
   .hero-card.warning { border-color:rgba(245,158,11,0.3); background:rgba(245,158,11,0.04); }
   .hero-card.danger { border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.04); }
@@ -39,33 +38,31 @@
   .health-dot.danger { background:var(--danger); box-shadow:0 0 6px rgba(239,68,68,0.5); }
   .health-dot.neutral { background:var(--muted); }
 
-  .ops-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px; margin-bottom:24px; }
-  .ops-card .ops-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
-  .ops-card .ops-status { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; padding:4px 10px; border-radius:20px; }
-  .ops-card .ops-status.green { background:rgba(34,197,94,0.12); color:var(--accent2); }
-  .ops-card .ops-status.yellow { background:rgba(245,158,11,0.12); color:var(--warn); }
-  .ops-card .ops-status.red { background:rgba(239,68,68,0.12); color:var(--danger); }
-  .ops-card .ops-status .dot { width:7px; height:7px; border-radius:50%; }
-  .ops-card .ops-status.green .dot { background:var(--accent2); }
-  .ops-card .ops-status.yellow .dot { background:var(--warn); }
-  .ops-card .ops-status.red .dot { background:var(--danger); }
-  .ops-card h2 { font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin:0; }
-
-  .ops-section { margin-bottom:16px; }
-  .ops-section:last-child { margin-bottom:0; }
-  .ops-section h3 { font-size:13px; font-weight:600; color:var(--text); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
-  .ops-section p { font-size:13px; color:var(--muted); line-height:1.6; }
-  .ops-section ul { list-style:none; padding:0; margin:0; }
-  .ops-section li { font-size:13px; color:var(--muted); padding:5px 0 5px 20px; position:relative; line-height:1.5; }
-  .ops-section li::before { content:"\2022"; position:absolute; left:0; color:var(--accent); font-weight:700; }
-  .ops-alert { background:rgba(245,158,11,0.08); border-left:3px solid var(--warn); padding:12px 16px; border-radius:0 6px 6px 0; margin-top:12px; }
-  .ops-alert p { font-size:13px; color:var(--warn); margin:0; }
-
   .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:16px; margin-bottom:24px; }
   .panel { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; }
   .panel h2 { font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:12px; }
 
-  .chart-wrap { position:relative; height:240px; }
+  /* Compact ops-read panel */
+  .ops-panel { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; }
+  .ops-panel .ops-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .ops-panel .ops-badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; padding:3px 8px; border-radius:12px; }
+  .ops-panel .ops-badge.green { background:rgba(34,197,94,0.12); color:var(--accent2); }
+  .ops-panel .ops-badge.yellow { background:rgba(245,158,11,0.12); color:var(--warn); }
+  .ops-panel .ops-badge.red { background:rgba(239,68,68,0.12); color:var(--danger); }
+  .ops-panel .ops-badge .dot { width:6px; height:6px; border-radius:50%; }
+  .ops-panel .ops-badge.green .dot { background:var(--accent2); }
+  .ops-panel .ops-badge.yellow .dot { background:var(--warn); }
+  .ops-panel .ops-badge.red .dot { background:var(--danger); }
+  .ops-panel h2 { font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin:0; }
+  .ops-panel .ops-headline { font-size:13px; color:var(--text); line-height:1.5; margin-bottom:10px; }
+  .ops-panel .ops-list { list-style:none; padding:0; margin:0 0 10px 0; }
+  .ops-panel .ops-list li { font-size:12px; color:var(--muted); padding:3px 0 3px 14px; position:relative; line-height:1.5; }
+  .ops-panel .ops-list li::before { content:"\2022"; position:absolute; left:0; color:var(--accent); }
+  .ops-panel .ops-section-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin:10px 0 4px 0; }
+  .ops-panel .ops-alert { background:rgba(245,158,11,0.08); border-left:3px solid var(--warn); padding:8px 12px; border-radius:0 4px 4px 0; margin-top:8px; }
+  .ops-panel .ops-alert p { font-size:12px; color:var(--warn); margin:0; }
+
+  .chart-wrap { position:relative; height:260px; }
   table { width:100%; border-collapse:collapse; font-size:13px; }
   th { text-align:left; padding:8px 10px; color:var(--muted); font-weight:500; border-bottom:1px solid var(--border); }
   td { padding:8px 10px; border-bottom:1px solid var(--border); }
@@ -98,7 +95,7 @@
 
 <script>
 const AD_SPEND_DATA = {"collected_at":"2026-05-29T01:59:59.466Z","platforms":{"meta":{"account_name":"NorthMac Services","account_id":"act_599729284106099","currency":"USD","active_campaigns":1,"total_spend_30d":322.61,"total_clicks_30d":840,"total_impressions_30d":54440,"total_conversions_30d":0,"avg_cpc":0.38,"avg_cpm":5.93,"ctr":1.54,"daily":[{"date":"2026-05-14","spend":17.18,"clicks":9,"impressions":482,"conversions":0},{"date":"2026-05-15","spend":23.58,"clicks":8,"impressions":532,"conversions":0},{"date":"2026-05-16","spend":18.53,"clicks":10,"impressions":235,"conversions":0},{"date":"2026-05-17","spend":33.27,"clicks":12,"impressions":584,"conversions":0},{"date":"2026-05-18","spend":24.79,"clicks":9,"impressions":486,"conversions":0},{"date":"2026-05-19","spend":17.09,"clicks":5,"impressions":220,"conversions":0},{"date":"2026-05-20","spend":22.62,"clicks":154,"impressions":12839,"conversions":0},{"date":"2026-05-21","spend":29.44,"clicks":179,"impressions":15951,"conversions":0},{"date":"2026-05-22","spend":26.72,"clicks":160,"impressions":9334,"conversions":0},{"date":"2026-05-23","spend":28.05,"clicks":72,"impressions":4206,"conversions":0},{"date":"2026-05-24","spend":21.44,"clicks":25,"impressions":1249,"conversions":0},{"date":"2026-05-25","spend":25.66,"clicks":75,"impressions":2928,"conversions":0},{"date":"2026-05-26","spend":15.81,"clicks":66,"impressions":1500,"conversions":0},{"date":"2026-05-27","spend":18.43,"clicks":56,"impressions":3894,"conversions":0}],"campaigns":[{"name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","spend":187.3,"clicks":786,"impressions":51889,"conversions":0},{"name":"NMS - Better Jobs Audit - Discovery - NC","spend":135.31,"clicks":54,"impressions":2551,"conversions":0}],"raw_insights":[{"spend":"17.18","impressions":"482","clicks":"9","ctr":"1.86722","cpc":"1.908889","cpm":"35.643154","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-14","date_stop":"2026-05-14"},{"spend":"23.58","impressions":"532","clicks":"8","ctr":"1.503759","cpc":"2.9475","cpm":"44.323308","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-15","date_stop":"2026-05-15"},{"spend":"18.53","impressions":"235","clicks":"10","ctr":"4.255319","cpc":"1.853","cpm":"78.851064","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-16","date_stop":"2026-05-16"},{"spend":"33.27","impressions":"584","clicks":"12","ctr":"2.054795","cpc":"2.7725","cpm":"56.969178","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-17","date_stop":"2026-05-17"},{"spend":"24.79","impressions":"486","clicks":"9","ctr":"1.851852","cpc":"2.754444","cpm":"51.00823","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-18","date_stop":"2026-05-18"},{"spend":"17.09","impressions":"220","clicks":"5","ctr":"2.272727","cpc":"3.418","cpm":"77.681818","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-19","date_stop":"2026-05-19"},{"spend":"0.87","impressions":"12","clicks":"1","ctr":"8.333333","cpc":"0.87","cpm":"72.5","campaign_name":"NMS - Better Jobs Audit - Discovery - NC","date_start":"2026-05-20","date_stop":"2026-05-20"},{"spend":"21.75","impressions":"12827","clicks":"153","ctr":"1.192796","cpc":"0.142157","cpm":"1.695642","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-20","date_stop":"2026-05-20"},{"spend":"29.44","impressions":"15951","clicks":"179","ctr":"1.122187","cpc":"0.164469","cpm":"1.845652","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-21","date_stop":"2026-05-21"},{"spend":"26.72","impressions":"9334","clicks":"160","ctr":"1.714163","cpc":"0.167","cpm":"2.862653","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-22","date_stop":"2026-05-22"},{"spend":"28.05","impressions":"4206","clicks":"72","ctr":"1.71184","cpc":"0.389583","cpm":"6.669044","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-23","date_stop":"2026-05-23"},{"spend":"21.44","impressions":"1249","clicks":"25","ctr":"2.001601","cpc":"0.8576","cpm":"17.165733","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-24","date_stop":"2026-05-24"},{"spend":"25.66","impressions":"2928","clicks":"75","ctr":"2.561475","cpc":"0.342133","cpm":"8.763661","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-25","date_stop":"2026-05-25"},{"spend":"15.81","impressions":"1500","clicks":"66","ctr":"4.4","cpc":"0.239545","cpm":"10.54","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-26","date_stop":"2026-05-26"},{"spend":"18.43","impressions":"3894","clicks":"56","ctr":"1.43811","cpc":"0.329107","cpm":"4.732922","campaign_name":"NMS | Managed Website Subscription | Direct Offer | Meta | Prospecting | v1","date_start":"2026-05-27","date_stop":"2026-05-27"}]},"google":{"status":"not_configured","note":"Install google-ads package to enable"},"apple":{"status":"not_configured","note":"OAuth keypair ready but API user role needed"}},"summary":{"total_spend_30d":322.61,"total_platforms_active":1,"last_updated":"2026-05-29T01:59:59.466Z"}};
-const AD_SPEND_NOTES = {"current_read":"Single Meta campaign active: NMS Managed Website Subscription direct offer. Spend ramping from ~$17/day to ~$33/day. CTR at 1.54% (yellow/warning zone for prospecting). CPC at $0.38 is healthy (green). CPM at $5.93 is excellent (green). Zero conversions tracked — this is the critical gap. Without conversion events, we can't optimize or calculate true ROAS.","watching":["CTR stuck below 2% — prospecting benchmark is 1-2%, we need creative refresh to push green","CPC creeping toward $0.50 — currently healthy at $0.38 but watch for saturation","Conversions: ZERO recorded — need pixel setup, landing page tracking, or offline event import","ROAS: Can't calculate without conversions — estimated at ~0x currently","CPM: $5.93 is great, watch if auction competition pushes it above $15"],"next_tests":["Install Meta pixel on MWS landing page + configure lead/conversion events","Google Ads integration (credentials ready, package needs install)","Apple Search Ads API access (OAuth keypair ready, need API user role)","Creative refresh test — new hook/copy to push CTR above 2%","Landing page A/B — test headline/CTA to improve downstream conversion","Lookalike audience expansion once we have 50+ conversion events"],"status":"yellow","status_label":"Needs Attention","alert":"Zero conversions tracked in 30 days. Meta pixel setup or landing page conversion events are needed before we can optimize ROAS."};
+const AD_SPEND_NOTES = {"headline":"Managed Website Subscription — prospecting test in flight. Zero purchases yet; judging by upstream funnel movement.","status":"yellow","status_label":"Learning","alert":null,"watching":["Funnel: 74 views → 14 CTA clicks → 14 checkout intent → 0 purchase. Checkout intent is the new bottleneck.","A/B: Variant B (0.30% CTA rate, scroll depth 3.0) beating A (0.00%, depth 2.1). B is control-worthy.","Meta health: CTR 2.21%, CPM $6.31, freq 3.21. Creative not fatigued yet.","Commercial Audit: PAUSED. 2 CRM leads routed. No paid spend."],"next_tests":["Fix checkout-intent → purchase gap (message-match or payment friction)","Scale B variant; freeze A","Hook/Story/Offer: test headline/CTA above the fold before creative churn","Retargeting readiness check once 50+ pixel events"]};
 </script>
 <script>
 let chartInstance = null;
@@ -139,7 +136,6 @@ async function loadNotes() {
 }
 
 function healthClass(metric, value) {
-  // Returns: 'healthy', 'warning', 'danger', 'neutral'
   if (value === undefined || value === null || isNaN(value)) return 'neutral';
   switch (metric) {
     case 'ctr':
@@ -178,37 +174,23 @@ function normText(metric) {
   }
 }
 
-function renderOpsCard(notes) {
-  if (!notes) return '';
-  const statusClass = notes.status || 'green';
-  const statusLabel = notes.status_label || 'Healthy';
+function renderOpsPanel(notes) {
+  if (!notes) return '<div class="ops-panel"><h2>Ops Read</h2><p style="font-size:12px;color:var(--muted);">No notes available.</p></div>';
+  const badgeClass = notes.status || 'green';
+  const badgeLabel = notes.status_label || 'Healthy';
   const alertHtml = notes.alert ? `<div class="ops-alert"><p>${notes.alert}</p></div>` : '';
-
   const watchingList = (notes.watching || []).map(w => `<li>${w}</li>`).join('');
   const testsList = (notes.next_tests || []).map(t => `<li>${t}</li>`).join('');
 
   return `
-  <div class="ops-card">
+  <div class="ops-panel">
     <div class="ops-header">
       <h2>Ops Read</h2>
-      <span class="ops-status ${statusClass}"><span class="dot"></span> ${statusLabel}</span>
+      <span class="ops-badge ${badgeClass}"><span class="dot"></span> ${badgeLabel}</span>
     </div>
-
-    <div class="ops-section">
-      <h3>\ud83d\udcd6 Current Read</h3>
-      <p>${notes.current_read || 'No read available.'}</p>
-    </div>
-
-    <div class="ops-section">
-      <h3>\ud83d\udc41\ufe0f Watching</h3>
-      <ul>${watchingList || '<li>Nothing specific on watch.</li>'}</ul>
-    </div>
-
-    <div class="ops-section">
-      <h3>\ud83e\uddea Next Tests</h3>
-      <ul>${testsList || '<li>No tests planned.</li>'}</ul>
-    </div>
-
+    <p class="ops-headline">${notes.headline || notes.current_read || 'No read available.'}</p>
+    ${watchingList ? `<div class="ops-section-title">Watching</div><ul class="ops-list">${watchingList}</ul>` : ''}
+    ${testsList ? `<div class="ops-section-title">Next Tests</div><ul class="ops-list">${testsList}</ul>` : ''}
     ${alertHtml}
   </div>
   `;
@@ -228,13 +210,11 @@ function render(data) {
   const cpm = meta.avg_cpm || 0;
   const conversions = meta.total_conversions_30d || 0;
 
-  // ROAS: conversion value / spend. If no conversion values, fallback to estimated
   let roas = 0;
   const convValue = campaigns.reduce((s, c) => s + (c.conversions_value || 0), 0);
   if (convValue > 0 && totalSpend > 0) {
     roas = convValue / totalSpend;
   } else if (conversions > 0) {
-    // Rough estimate: $200 LTV per conversion for MWS
     roas = (conversions * 200) / totalSpend;
   }
 
@@ -247,7 +227,7 @@ function render(data) {
   const convHealth = healthClass('conversions', conversions);
   const roasHealth = healthClass('roas', roas);
 
-  const notesHtml = window._opsNotesHtml || '';
+  const opsHtml = window._opsNotesHtml || '';
 
   let html = `
   <div class="hero">
@@ -303,16 +283,17 @@ function render(data) {
     </div>
   </div>
 
-  ${notesHtml}
-
-  <div class="panel">
-    <h2>Daily Spend Trend (30 Days)</h2>
-    <div class="chart-wrap">
-      <canvas id="spendChart"></canvas>
+  <div class="grid">
+    <div class="panel">
+      <h2>Daily Spend Trend (30 Days)</h2>
+      <div class="chart-wrap">
+        <canvas id="spendChart"></canvas>
+      </div>
     </div>
+    ${opsHtml}
   </div>
 
-  <div class="panel" style="margin-top:16px;">
+  <div class="panel">
     <h2>Campaigns (Last 30 Days)</h2>
     <table>
       <thead>
@@ -342,11 +323,10 @@ function render(data) {
   document.getElementById('content').innerHTML = html;
   document.getElementById('last-updated').textContent = 'Updated: ' + new Date(data.collected_at).toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' EST';
 
-  // Render chart
   const ctx = document.getElementById('spendChart').getContext('2d');
   if (chartInstance) chartInstance.destroy();
 
-  const labels = daily.map(d => d.date.slice(5)); // MM-DD
+  const labels = daily.map(d => d.date.slice(5));
   const spendData = daily.map(d => d.spend);
   const clickData = daily.map(d => d.clicks);
 
@@ -423,7 +403,7 @@ async function refreshData() {
   try {
     const data = await loadData();
     const notes = await loadNotes();
-    window._opsNotesHtml = renderOpsCard(notes);
+    window._opsNotesHtml = renderOpsPanel(notes);
     render(data);
   } catch (e) {
     document.getElementById('content').innerHTML = `<div class="error">Error: ${e.message}</div>`;
@@ -437,7 +417,7 @@ async function init() {
   try {
     const data = await loadData();
     const notes = await loadNotes();
-    window._opsNotesHtml = renderOpsCard(notes);
+    window._opsNotesHtml = renderOpsPanel(notes);
     render(data);
   } catch (e) {
     document.getElementById('content').innerHTML = `<div class="error">Error loading data: ${e.message}</div>`;
