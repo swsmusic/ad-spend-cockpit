@@ -81,6 +81,14 @@
   .bn-diagnosis strong { color:var(--text); }
   .bn-worst { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; padding:2px 8px; border-radius:10px; background:rgba(239,68,68,0.1); color:var(--danger); margin-left:8px; }
 
+  .bn-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; position:relative; }
+  .bn-card.danger { border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.04); }
+  .bn-card .bn-label { font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:6px; }
+  .bn-card .bn-worst { font-size:13px; font-weight:600; color:var(--danger); }
+  .bn-card .bn-diagnosis { font-size:11px; color:var(--muted); line-height:1.4; margin-top:6px; }
+  .bn-card .bn-diagnosis strong { color:var(--text); }
+  .bn-card .bn-updated { font-size:10px; color:var(--muted); margin-top:6px; opacity:0.7; }
+
   .chart-wrap { position:relative; height:260px; }
   table { width:100%; border-collapse:collapse; font-size:13px; }
   th { text-align:left; padding:8px 10px; color:var(--muted); font-weight:500; border-bottom:1px solid var(--border); }
@@ -215,61 +223,20 @@ function renderOpsPanel(notes) {
   `;
 }
 
-function renderBottleneck(notes) {
+function renderBottleneckCard(notes) {
   const bn = notes?.bottleneck;
   if (!bn || !bn.stages || bn.stages.length < 2) return '';
-
-  const maxVal = Math.max(...bn.stages.map(s => s.value || 0));
   const worst = bn.worst_drop;
-
-  // Determine bar heights (log scale for wide ranges)
-  const heights = bn.stages.map(s => {
-    const v = s.value || 0;
-    if (maxVal === 0) return 10;
-    const pct = v / maxVal;
-    return Math.max(10, Math.round(pct * 120));
-  });
-
-  // Build drop labels between stages
-  let dropsHtml = '';
-  if (bn.drops && bn.drops.length > 0) {
-    dropsHtml = bn.drops.map((d, i) => {
-      const isBad = d.rate <= 15 || (worst && d.from === worst.from && d.to === worst.to);
-      const cls = isBad ? 'bn-drop bad' : 'bn-drop';
-      return `<span class="${cls}">${d.rate.toFixed(d.rate < 10 ? 1 : 0)}%</span>`;
-    }).join('');
-  }
-
-  // Build stage bars
-  const stagesHtml = bn.stages.map((s, i) => {
-    const h = heights[i];
-    // Color the worst stage and its neighbor red, others neutral
-    let barCls = 'bn-bar neutral';
-    if (worst) {
-      const worstIdx = bn.stages.findIndex(st => st.name === worst.to);
-      if (worstIdx >= 0 && (i === worstIdx || i === worstIdx - 1)) {
-        barCls = 'bn-bar danger';
-      }
-    }
-    return `
-    <div class="bn-stage">
-      <div class="bn-stage-value">${s.value >= 1000 ? (s.value/1000).toFixed(1) + 'K' : s.value}</div>
-      <div class="bn-bar ${barCls}" style="height:${h}px;"></div>
-      <div class="bn-stage-name">${s.name}</div>
-    </div>`;
-  }).join('');
-
-  const worstBadge = worst ? `<span class="bn-worst">\u26a0 ${worst.label || 'Bottleneck'}</span>` : '';
-
+  const diagnosis = bn.diagnosis || 'No diagnosis available.';
+  // Truncate diagnosis to fit card
+  const shortDiag = diagnosis.length > 120 ? diagnosis.slice(0, 120) + '...' : diagnosis;
   return `
-  <div class="bn-panel">
-    <h2>Bottleneck Analysis ${worstBadge}</h2>
-    <div class="bn-label">${bn.funnel_label || 'Funnel'} \u00b7 Updated ${bn.updated || ''}</div>
-    <div class="bn-funnel">
-      ${stagesHtml}
+    <div class="hero-card bn-card ${worst ? 'danger' : 'neutral'}">
+      <div class="bn-label">Bottleneck</div>
+      <div class="bn-worst">${worst ? worst.label || 'Bottleneck' : 'No bottleneck'}</div>
+      <div class="bn-diagnosis"><strong>${bn.funnel_label || 'Funnel'}:</strong> ${shortDiag}</div>
+      <div class="bn-updated">Updated ${bn.updated || ''}</div>
     </div>
-    <div class="bn-diagnosis"><strong>Diagnosis:</strong> ${bn.diagnosis || 'No diagnosis available.'}</div>
-  </div>
   `;
 }
 
@@ -359,9 +326,8 @@ function render(data) {
       <div class="delta">${roas > 0 ? 'Estimated from spend' : 'No conv. data yet'}</div>
       <div class="norm">${normText('roas')}</div>
     </div>
+    ${bnHtml}
   </div>
-
-  ${bnHtml}
 
   <div class="grid">
     <div class="panel">
@@ -484,7 +450,7 @@ async function refreshData() {
     const data = await loadData();
     const notes = await loadNotes();
     window._opsNotesHtml = renderOpsPanel(notes);
-    window._bottleneckHtml = renderBottleneck(notes);
+    window._bottleneckHtml = renderBottleneckCard(notes);
     render(data);
   } catch (e) {
     document.getElementById('content').innerHTML = `<div class="error">Error: ${e.message}</div>`;
@@ -499,7 +465,7 @@ async function init() {
     const data = await loadData();
     const notes = await loadNotes();
     window._opsNotesHtml = renderOpsPanel(notes);
-    window._bottleneckHtml = renderBottleneck(notes);
+    window._bottleneckHtml = renderBottleneckCard(notes);
     render(data);
   } catch (e) {
     document.getElementById('content').innerHTML = `<div class="error">Error loading data: ${e.message}</div>`;
